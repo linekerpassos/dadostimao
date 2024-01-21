@@ -2,8 +2,9 @@
 title: "Painel de dados do Timão"
 output: 
   flexdashboard::flex_dashboard:
-    # navbar:
-    #     - { icon: "fa-twitter", href: "https://twitter.com/LINK_PASS", align: right}
+    navbar:
+      # - { icon: "fa-twitter", href: "https://twitter.com/LINK_PASS", align: right}
+      - { icon: "fa-question-circle", href: "https://www.meutimao.com.br/torcida/lp.88", align: right }
     theme:
       version: 4
       bg: "#dbdbdb"
