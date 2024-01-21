@@ -41,6 +41,7 @@ library(stargazer)
 library(tidyr)
 library(forcats)
 library(plotly)
+library(scales)
 
 # my.d <- dirname(rstudioapi::getActiveDocumentContext()$path)
 # setwd(my.d)
@@ -106,8 +107,9 @@ ggplot()+
   scale_x_continuous(n.breaks = 13)+ # adiciona todos os anos no gráfico
   theme_classic()+
   theme(legend.position = "bottom",
-    legend.text = element_text(colour="black", size=10,
-                                   face="bold"))+
+    legend.text = element_text(colour="black", size=7,
+                                   face="bold"),
+    axis.text.x=element_text(size=5))+
   annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez")+
   geom_vline(xintercept = 2012) +
   annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
@@ -118,8 +120,8 @@ ggplot()+
   geom_vline(xintercept = 2021) +
   annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio") +
   scale_fill_manual(name="",values=c("lightblue","#F8766D"))+
-  scale_y_continuous(n.breaks = 10)+
-  labs(x = "Anos", y = "Valores em milhares") -> plot_ap
+  scale_y_continuous(n.breaks = 10,labels = label_number(big.mark = "."))+
+  labs(x = "Anos", y = "Valores em milhares",size=4) -> plot_ap
 
 ggplotly(plot_ap)
 
