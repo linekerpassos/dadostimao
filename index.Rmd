@@ -109,7 +109,7 @@ ggplot()+
   theme(legend.position = "bottom",
     legend.text = element_text(colour="black", size=7,
                                    face="bold"),
-    axis.text.x=element_text(size=5))+
+    axis.text.x=element_text(size=6))+
   annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez",size=3)+
   geom_vline(xintercept = 2012) +
   annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi",size=3) +
@@ -185,9 +185,9 @@ ggplot()+
   scale_x_continuous(n.breaks = 13)+ # adiciona todos os anos no gráfico
   theme_classic()+
   theme(legend.position = "bottom",
-        legend.text = element_text(colour="black", size=10,
+        legend.text = element_text(colour="black", size=7,
                                    face="bold"),
-        axis.text.x=element_text(size=5))+
+        axis.text.x=element_text(size=6))+
   annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez",size=3)+
   geom_vline(xintercept = 2012) +
   annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi",size=3) +
@@ -227,7 +227,7 @@ ggplot()+
   theme(legend.position = "bottom",
         legend.text = element_text(colour="black", size=10,
                                    face="bold"),
-        axis.text.x=element_text(size=5))+
+        axis.text.x=element_text(size=6))+
   annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez",size=3)+
   geom_vline(xintercept = 2012) +
   annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi",size=3) +
@@ -267,7 +267,7 @@ ggplot()+
   theme(legend.position = "bottom",
         legend.text = element_text(colour="black", size=10,
                                    face="bold"),
-        axis.text.x=element_text(size=5))+
+        axis.text.x=element_text(size=6))+
   annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez",size=3)+
   geom_vline(xintercept = 2012) +
   annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi",size=3) +
@@ -298,7 +298,7 @@ ggplot()+
   theme(legend.position = "bottom",
         legend.text = element_text(colour="black", size=10,
                                    face="bold"),
-        axis.text.x=element_text(size=5))+
+        axis.text.x=element_text(size=6))+
   annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez",size=3)+
   geom_vline(xintercept = 2012) +
   annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi",size=3) +
@@ -333,7 +333,7 @@ ggplot()+
   theme(legend.position = "bottom",
         legend.text = element_text(colour="black", size=7,
                                    face="bold"),
-        axis.text.x=element_text(size=5))+
+        axis.text.x=element_text(size=6))+
   annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez",size=3)+
   geom_vline(xintercept = 2012) +
   annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi",size=3) +
