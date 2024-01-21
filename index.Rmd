@@ -42,6 +42,7 @@ library(tidyr)
 library(forcats)
 library(plotly)
 library(scales)
+library(ggrepel)
 
 # my.d <- dirname(rstudioapi::getActiveDocumentContext()$path)
 # setwd(my.d)
@@ -121,9 +122,12 @@ ggplot()+
   annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio",size=3) +
   scale_fill_manual(name="",values=c("lightblue","#F8766D"))+
   scale_y_continuous(n.breaks = 10,labels = label_number(big.mark = "."))+
-  labs(x = "Anos", y = "Valores em milhares") -> plot_ap
+  labs(x = "", y = "Valores em milhares") -> plot_ap
 
-ggplotly(plot_ap)
+ggplotly(plot_ap) %>%
+layout(legend = list(orientation = "h",   # show entries horizontally
+                     xanchor = "center",  # use center of legend as anchor
+                     x = 0.5))             # put legend in center of x-axis  
 
 ```
 
@@ -145,21 +149,25 @@ ggplot(dados) +
     colour = "grey50", alpha = 0.5
   ) + 
   geom_text(
-    aes(x = inicio, y = 1, label = pr),
+    aes(x = inicio, y = 0, label = pr),
     data = df_pr,
     size = 3, vjust = 0, hjust = 0, nudge_x = 0
   ) +
   geom_line(aes(x=ano,y=`passivo/ativo`,group=1,color="Endividamento total/Ativo"),size=1)+
   geom_line(aes(x=ano,y=`pcp/ativo`,group=1,color="Endividamento CP/Ativo"),size=1)+
   geom_line(aes(x=ano,y=`plp/ativo`,group=1,color="Endividamento LP/Ativo"),size=1)+
+  annotate("text",x = 2020, y = 1.2,xend = 2022, yend = 1.3,label="Passivo Total/Ativo",size=3) +
+  annotate("text",x = 2020, y = 0.76,xend = 2022, yend = 1.3,label="Passivo CP/Ativo",size=3,color="#FF0000") +
+  annotate("text",x = 2020, y = 0.35,xend = 2022, yend = 1.3,label="Passivo LP/Ativo",size=3,color="#FF6600") +
   scale_colour_manual(name="",values=cor_line)+
   scale_fill_manual(values = c("white", "blue","black","red")) +
   scale_x_continuous(n.breaks = 10)+ # adiciona todos os anos no gráfico
-  xlab("ano") + 
+  xlab("") + 
   ylab("")+
   theme(legend.title = element_blank(),
-        legend.text = element_text(size=5,hjust = 0.5),
-        legend.position = "right")
+        legend.text = element_blank(),
+        # legend.text = element_text(size=5,hjust = 0.5),
+        legend.position = "none")
 
 
 # Gráficos
@@ -199,9 +207,12 @@ ggplot()+
   annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio",size=3) +
   scale_fill_manual(name="",values=c("lightblue","#F8766D"))+
   scale_y_continuous(n.breaks = 20,labels = label_number(big.mark = "."))+
-  labs(x = "Anos", y = "Valores em milhares",size=4) -> plot_rd
+  labs(x = "", y = "Valores em milhares",size=4) -> plot_rd
 
-ggplotly(plot_rd)  
+ggplotly(plot_rd) %>%
+layout(legend = list(orientation = "h",   # show entries horizontally
+                     xanchor = "center",  # use center of legend as anchor
+                     x = 0.5))             # put legend in center of x-axis  
 
 ```
 
@@ -239,7 +250,7 @@ ggplot()+
   annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio",size=3) +
   # scale_fill_manual(name="",values=c("#4699dd"))+
   scale_y_continuous(n.breaks = 3)+
-  labs(x = "Anos", y = "Qt. títulos") -> plot_tit
+  labs(x = "", y = "Qt. títulos") -> plot_tit
 
 ggplotly(plot_tit)
 
@@ -255,6 +266,7 @@ classif_df[14,1] <- 2023
 classif_df[14,10] <- 13
 classif_df[14,11] <- "Duílio"
 
+plot_pos <- 
 classif_df %>% 
   pivot_longer(!ano & !pr,names_to = "ind",values_to = "valor") %>% 
   arrange(pr,ano) %>% 
@@ -279,9 +291,13 @@ ggplot()+
   annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio",size=3) +
   # scale_fill_manual(name="",values=c("#4699dd"))+
   scale_y_continuous(n.breaks = 20)+
-  labs(x = "Anos", y = "Posição no Brasileirão") -> plot_pos
+  labs(x = "", y = "Posição no Brasileirão") 
 
-ggplotly(plot_pos)
+
+ggplotly(plot_pos) %>% 
+layout(legend = list(orientation = "h",   # show entries horizontally
+                     xanchor = "center",  # use center of legend as anchor
+                     x = 0.5))             # put legend in center of x-axis   
 
 ```
 
@@ -310,7 +326,7 @@ ggplot()+
   annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio",size=3) +
   # scale_fill_manual(name="",values=c("#4699dd"))+
   scale_y_continuous(n.breaks = 20)+
-  labs(x = "Anos", y = "Aproveitamento em %") 
+  labs(x = "", y = "Aproveitamento em %") 
 ggplotly(plot_aprov)
 
 ```
@@ -345,8 +361,11 @@ ggplot()+
   annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio",size=3) +
   scale_fill_manual(name="",values=c("lightblue","#F8766D"))+
   scale_y_continuous(n.breaks = 20)+
-  labs(x = "Anos", y = "Gols") -> plot_ad
+  labs(x = "", y = "Gols") -> plot_ad
 
-ggplotly(plot_ad)
+ggplotly(plot_ad) %>%
+layout(legend = list(orientation = "h",   # show entries horizontally
+                     xanchor = "center",  # use center of legend as anchor
+                     x = 0.5))             # put legend in center of x-axis  
 ```
 
