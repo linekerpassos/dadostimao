@@ -110,18 +110,18 @@ ggplot()+
     legend.text = element_text(colour="black", size=7,
                                    face="bold"),
     axis.text.x=element_text(size=5))+
-  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez")+
+  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez",size=3)+
   geom_vline(xintercept = 2012) +
-  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
+  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi",size=3) +
   geom_vline(xintercept = 2015) +
-  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade") +
+  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade",size=3) +
   geom_vline(xintercept = 2018) +
-  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez") +
+  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez",size=3) +
   geom_vline(xintercept = 2021) +
-  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio") +
+  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio",size=3) +
   scale_fill_manual(name="",values=c("lightblue","#F8766D"))+
   scale_y_continuous(n.breaks = 10,labels = label_number(big.mark = "."))+
-  labs(x = "Anos", y = "Valores em milhares",size=4) -> plot_ap
+  labs(x = "Anos", y = "Valores em milhares") -> plot_ap
 
 ggplotly(plot_ap)
 
@@ -186,19 +186,20 @@ ggplot()+
   theme_classic()+
   theme(legend.position = "bottom",
         legend.text = element_text(colour="black", size=10,
-                                   face="bold"))+
-  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez")+
+                                   face="bold"),
+        axis.text.x=element_text(size=5))+
+  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez",size=3)+
   geom_vline(xintercept = 2012) +
-  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
+  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi",size=3) +
   geom_vline(xintercept = 2015) +
-  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade") +
+  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade",size=3) +
   geom_vline(xintercept = 2018) +
-  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez") +
+  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez",size=3) +
   geom_vline(xintercept = 2021) +
-  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio") +
+  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio",size=3) +
   scale_fill_manual(name="",values=c("lightblue","#F8766D"))+
-  scale_y_continuous(n.breaks = 20)+
-  labs(x = "Anos", y = "Valores em milhares") -> plot_rd
+  scale_y_continuous(n.breaks = 20,labels = label_number(big.mark = "."))+
+  labs(x = "Anos", y = "Valores em milhares",size=4) -> plot_rd
 
 ggplotly(plot_rd)  
 
@@ -225,16 +226,17 @@ ggplot()+
   theme_classic()+
   theme(legend.position = "bottom",
         legend.text = element_text(colour="black", size=10,
-                                   face="bold"))+
-  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez")+
+                                   face="bold"),
+        axis.text.x=element_text(size=5))+
+  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez",size=3)+
   geom_vline(xintercept = 2012) +
-  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
+  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi",size=3) +
   geom_vline(xintercept = 2015) +
-  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade") +
+  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade",size=3) +
   geom_vline(xintercept = 2018) +
-  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez") +
+  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez",size=3) +
   geom_vline(xintercept = 2021) +
-  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio") +
+  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio",size=3) +
   # scale_fill_manual(name="",values=c("#4699dd"))+
   scale_y_continuous(n.breaks = 3)+
   labs(x = "Anos", y = "Qt. títulos") -> plot_tit
@@ -264,16 +266,17 @@ ggplot()+
   theme_classic()+
   theme(legend.position = "bottom",
         legend.text = element_text(colour="black", size=10,
-                                   face="bold"))+
-  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez")+
+                                   face="bold"),
+        axis.text.x=element_text(size=5))+
+  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez",size=3)+
   geom_vline(xintercept = 2012) +
-  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
+  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi",size=3) +
   geom_vline(xintercept = 2015) +
-  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade") +
+  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade",size=3) +
   geom_vline(xintercept = 2018) +
-  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez") +
+  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez",size=3) +
   geom_vline(xintercept = 2021) +
-  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio") +
+  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio",size=3) +
   # scale_fill_manual(name="",values=c("#4699dd"))+
   scale_y_continuous(n.breaks = 20)+
   labs(x = "Anos", y = "Posição no Brasileirão") -> plot_pos
@@ -294,16 +297,17 @@ ggplot()+
   theme_classic()+
   theme(legend.position = "bottom",
         legend.text = element_text(colour="black", size=10,
-                                   face="bold"))+
-  annotate("text",x = 2010, y = 1.5,xend = 2012, yend = 1,label="Sanchez")+
+                                   face="bold"),
+        axis.text.x=element_text(size=5))+
+  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez",size=3)+
   geom_vline(xintercept = 2012) +
-  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
+  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi",size=3) +
   geom_vline(xintercept = 2015) +
-  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade") +
+  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade",size=3) +
   geom_vline(xintercept = 2018) +
-  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez") +
+  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez",size=3) +
   geom_vline(xintercept = 2021) +
-  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio") +
+  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio",size=3) +
   # scale_fill_manual(name="",values=c("#4699dd"))+
   scale_y_continuous(n.breaks = 20)+
   labs(x = "Anos", y = "Aproveitamento em %") 
@@ -327,17 +331,18 @@ ggplot()+
   scale_x_continuous(n.breaks = 13)+ # adiciona todos os anos no gráfico
   theme_classic()+
   theme(legend.position = "bottom",
-        legend.text = element_text(colour="black", size=10,
-                                   face="bold"))+
-  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez")+
+        legend.text = element_text(colour="black", size=7,
+                                   face="bold"),
+        axis.text.x=element_text(size=5))+
+  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez",size=3)+
   geom_vline(xintercept = 2012) +
-  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
+  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi",size=3) +
   geom_vline(xintercept = 2015) +
-  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade") +
+  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade",size=3) +
   geom_vline(xintercept = 2018) +
-  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez") +
+  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez",size=3) +
   geom_vline(xintercept = 2021) +
-  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio") +
+  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio",size=3) +
   scale_fill_manual(name="",values=c("lightblue","#F8766D"))+
   scale_y_continuous(n.breaks = 20)+
   labs(x = "Anos", y = "Gols") -> plot_ad
