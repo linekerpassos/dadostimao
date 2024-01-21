@@ -1,0 +1,345 @@
+---
+title: "Painel de dados do Timão"
+output: 
+  flexdashboard::flex_dashboard:
+    # navbar:
+    #     - { icon: "fa-twitter", href: "https://twitter.com/LINK_PASS", align: right}
+    theme:
+      version: 4
+      bg: "#dbdbdb"
+      fg: "#101010" 
+      primary: "#101010"
+      navbar-bg: "#dbdbdb"
+      base_font: 
+        google: Prompt
+      heading_font:
+        google: Sen
+      code_font:
+        google: 
+          # arguments to sass::font_google() 
+          family: JetBrains Mono
+          local: false
+    orientation: columns
+    logo: favicon-hawk-32.png
+    vertical_layout: fill
+---
+
+<!-- <style> -->
+<!-- .navbar, [data-toggle=tab], .navbar-brand  {   background-color:#75002B;   border-color:black;   color:white; } -->
+
+<!-- .navbar-logo img { -->
+<!--     position: absolute; -->
+<!--     left: 0px; -->
+<!-- } -->
+<!-- </style> -->
+
+```{r global, include=FALSE}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(stargazer)
+library(tidyr)
+library(forcats)
+library(plotly)
+
+# my.d <- dirname(rstudioapi::getActiveDocumentContext()$path)
+# setwd(my.d)
+
+#arq <- gsub(" ","",paste(my.d,"/Base-dados-Timao.xlsx"))
+arq <- "C:/Users/linek/Documents/R/Base-dados-Timao.xlsx"
+arq2 <- "C:/Users/linek/Documents/dados-BR-VP-Luxa.xlsx"
+
+dados <- read_xlsx(arq,1)
+dados$ano <- as.numeric(dados$ano)
+
+
+df_pr <- dados %>% group_by(pr,inicio, fim) %>% count() %>% arrange(inicio)
+dados <- dados %>% select(-12,-13)
+
+dados2 <- read_xlsx(arq2,1)
+dados3 <- read_xlsx(arq2,2)
+
+
+# cria tabela de frequencia para titulos
+fr_tit <- dados %>% count(títulos) %>% mutate(f_a=cumsum(n),fr=n/sum(n),fr_a=cumsum(fr))
+fr_tit
+
+```
+
+Dados patrimoniais e de resultado
+====================
+
+Column {data-width=500, .tabset}
+-----------------------------------------------------------------------
+### Ativos e Passivos
+
+```{r}
+# # endiv x titulos
+# ggplot(dados)+
+#   #geom_point(color="grey")+
+#   geom_line(aes(x=ano,y=`passivo/ativo`,group=1,color="Endividamento total/Ativo"),size=1)+
+#   geom_line(aes(x=ano,y=`pcp/ativo`,group=1,color="Endividamento CP/Ativo"),size=1)+
+#   geom_line(aes(x=ano,y=`plp/ativo`,group=1,color="Endividamento LP/Ativo"),size=1)+
+#   geom_line(aes(x=ano,y=títulos,group=1,color="Qtde. de títulos"),size=1)+
+#   scale_colour_manual(name="",values=cor_line)+
+#   scale_x_continuous(n.breaks = 10)+ # adiciona todos os anos no gráfico
+#   theme(legend.text = element_text(colour="black", size=15,
+#                                    face="bold"))+
+#   annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez")+
+#   geom_vline(xintercept = 2012) +
+#   annotate("text",x = 2012, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
+#   geom_vline(xintercept = 2015) +
+#   annotate("text",x = 2015, y = 1.5,xend = 2017, yend = 1,label="Andrade") +
+#   geom_vline(xintercept = 2018) +
+#   annotate("text",x = 2018, y = 1.5,xend = 2019, yend = 1,label="Sanchez") +
+#   
+#   theme_classic() +
+#   #transition_reveal(ano)+
+#   labs(x = "", y ="",title= "SCCP - Endividamento x títulos") #,
+dados %>% 
+  pivot_longer(!ano & !pr,names_to = "ind",values_to = "valor") %>% 
+  arrange(pr,ano) %>% 
+  filter(ind=="ativo"|ind=="passivo") %>% 
+  rename(indicador=ind) %>% 
+ggplot()+
+  geom_bar(aes(x=ano,y=valor,fill=indicador),size=1,position = 'dodge',stat = "identity")+
+  scale_x_continuous(n.breaks = 13)+ # adiciona todos os anos no gráfico
+  theme_classic()+
+  theme(legend.position = "bottom",
+    legend.text = element_text(colour="black", size=10,
+                                   face="bold"))+
+  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez")+
+  geom_vline(xintercept = 2012) +
+  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
+  geom_vline(xintercept = 2015) +
+  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade") +
+  geom_vline(xintercept = 2018) +
+  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez") +
+  geom_vline(xintercept = 2021) +
+  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio") +
+  scale_fill_manual(name="",values=c("lightblue","#F8766D"))+
+  scale_y_continuous(n.breaks = 10)+
+  labs(x = "Anos", y = "Valores em milhares") -> plot_ap
+
+ggplotly(plot_ap)
+
+```
+
+### Endividamento por tipo e presidente
+
+```{r}
+cor_line <- c("Endividamento total/Ativo"="#000000","Endividamento CP/Ativo"="#FF0000","Endividamento LP/Ativo"="#FF6600",
+              "Qtde. de títulos"="#000000") # vetor com cores para cada linha do gráfico
+
+ggplot(dados) + 
+  geom_rect(
+    aes(xmin = inicio, xmax = fim, fill = pr),
+    ymin = -Inf, ymax = Inf, alpha = 0.2,
+    data = df_pr
+  ) +
+  geom_vline(
+    aes(xintercept = as.numeric(inicio)), 
+    data = df_pr,
+    colour = "grey50", alpha = 0.5
+  ) + 
+  geom_text(
+    aes(x = inicio, y = 1, label = pr),
+    data = df_pr,
+    size = 3, vjust = 0, hjust = 0, nudge_x = 0
+  ) +
+  geom_line(aes(x=ano,y=`passivo/ativo`,group=1,color="Endividamento total/Ativo"),size=1)+
+  geom_line(aes(x=ano,y=`pcp/ativo`,group=1,color="Endividamento CP/Ativo"),size=1)+
+  geom_line(aes(x=ano,y=`plp/ativo`,group=1,color="Endividamento LP/Ativo"),size=1)+
+  scale_colour_manual(name="",values=cor_line)+
+  scale_fill_manual(values = c("white", "blue","black","red")) +
+  scale_x_continuous(n.breaks = 10)+ # adiciona todos os anos no gráfico
+  xlab("ano") + 
+  ylab("")+
+  theme(legend.title = element_blank(),
+        legend.text = element_text(size=5,hjust = 0.5),
+        legend.position = "right")
+
+
+# Gráficos
+
+
+```
+
+> Nota: CP = curto prazo; LP = longo prazo.
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+### Receitas e Despesas do Futebol
+```{r}
+dados %>% 
+  pivot_longer(!ano & !pr,names_to = "ind",values_to = "valor") %>% 
+  arrange(pr,ano) %>% 
+  filter(ind=="receita"|ind=="despesa") %>% 
+  rename(indicador=ind) %>% 
+  mutate(indicador=as.factor(indicador),
+         indicador=fct_relevel(indicador,"receita")) %>% 
+ggplot()+
+  geom_bar(aes(x=ano,y=valor,fill=indicador),size=1,position = 'dodge',stat = "identity")+
+  scale_x_continuous(n.breaks = 13)+ # adiciona todos os anos no gráfico
+  theme_classic()+
+  theme(legend.position = "bottom",
+        legend.text = element_text(colour="black", size=10,
+                                   face="bold"))+
+  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez")+
+  geom_vline(xintercept = 2012) +
+  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
+  geom_vline(xintercept = 2015) +
+  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade") +
+  geom_vline(xintercept = 2018) +
+  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez") +
+  geom_vline(xintercept = 2021) +
+  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio") +
+  scale_fill_manual(name="",values=c("lightblue","#F8766D"))+
+  scale_y_continuous(n.breaks = 20)+
+  labs(x = "Anos", y = "Valores em milhares") -> plot_rd
+
+ggplotly(plot_rd)  
+
+```
+
+> Nota: as demonstrações financeiras anteriores à 2019 não estão mais disponíveis no site do clube.
+
+Dados do futebol masculino
+====================
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+### Títulos
+
+```{r}
+dados %>% 
+  pivot_longer(!ano & !pr,names_to = "ind",values_to = "valor") %>% 
+  arrange(pr,ano) %>% 
+  filter(ind=="títulos") %>% 
+  rename(indicador=ind) %>% 
+ggplot()+
+  geom_bar(aes(x=ano,y=valor),size=1,position = 'dodge',stat = "identity",fill="lightblue")+
+  scale_x_continuous(n.breaks = 13)+ # adiciona todos os anos no gráfico
+  theme_classic()+
+  theme(legend.position = "bottom",
+        legend.text = element_text(colour="black", size=10,
+                                   face="bold"))+
+  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez")+
+  geom_vline(xintercept = 2012) +
+  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
+  geom_vline(xintercept = 2015) +
+  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade") +
+  geom_vline(xintercept = 2018) +
+  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez") +
+  geom_vline(xintercept = 2021) +
+  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio") +
+  # scale_fill_manual(name="",values=c("#4699dd"))+
+  scale_y_continuous(n.breaks = 3)+
+  labs(x = "Anos", y = "Qt. títulos") -> plot_tit
+
+ggplotly(plot_tit)
+
+```
+
+Column {data-width=500, .tabset}
+-----------------------------------------------------------------------
+### Classificação no BR
+
+```{r}
+classif_df <- dados
+classif_df[14,1] <- 2023
+classif_df[14,10] <- 13
+classif_df[14,11] <- "Duílio"
+
+classif_df %>% 
+  pivot_longer(!ano & !pr,names_to = "ind",values_to = "valor") %>% 
+  arrange(pr,ano) %>% 
+  filter(ind=="classif-BR") %>% 
+  rename(indicador=ind) %>% 
+ggplot()+
+  geom_bar(aes(x=ano,y=valor),size=1,position = 'dodge',stat = "identity",fill="lightblue")+
+  scale_x_continuous(n.breaks = 13)+ # adiciona todos os anos no gráfico
+  theme_classic()+
+  theme(legend.position = "bottom",
+        legend.text = element_text(colour="black", size=10,
+                                   face="bold"))+
+  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez")+
+  geom_vline(xintercept = 2012) +
+  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
+  geom_vline(xintercept = 2015) +
+  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade") +
+  geom_vline(xintercept = 2018) +
+  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez") +
+  geom_vline(xintercept = 2021) +
+  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio") +
+  # scale_fill_manual(name="",values=c("#4699dd"))+
+  scale_y_continuous(n.breaks = 20)+
+  labs(x = "Anos", y = "Posição no Brasileirão") -> plot_pos
+
+ggplotly(plot_pos)
+
+```
+
+### Aproveitamento no BR
+
+```{r}
+plot_aprov <-
+dados3 %>% 
+  select(ano,aprov) %>% 
+ggplot()+
+  geom_bar(aes(x=ano,y=aprov),size=1,position = 'dodge',stat = "identity",fill="lightblue")+
+  scale_x_continuous(n.breaks = 13)+ # adiciona todos os anos no gráfico
+  theme_classic()+
+  theme(legend.position = "bottom",
+        legend.text = element_text(colour="black", size=10,
+                                   face="bold"))+
+  annotate("text",x = 2010, y = 1.5,xend = 2012, yend = 1,label="Sanchez")+
+  geom_vline(xintercept = 2012) +
+  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
+  geom_vline(xintercept = 2015) +
+  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade") +
+  geom_vline(xintercept = 2018) +
+  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez") +
+  geom_vline(xintercept = 2021) +
+  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio") +
+  # scale_fill_manual(name="",values=c("#4699dd"))+
+  scale_y_continuous(n.breaks = 20)+
+  labs(x = "Anos", y = "Aproveitamento em %") 
+ggplotly(plot_aprov)
+
+```
+
+### Ataque X Defesa no BR
+
+```{r}
+dados3 %>% 
+  select(ano,gp,gc) %>%
+  pivot_longer(!ano,names_to = "ind",values_to = "gols") %>% 
+  arrange(ano) %>% 
+  rename(indicador=ind) %>% 
+  mutate(indicador=ifelse(indicador=="gp","gols-pro","gols-contra"),
+    indicador=as.factor(indicador),
+         indicador=fct_relevel(indicador,"gols-pro")) %>% 
+ggplot()+
+  geom_bar(aes(x=ano,y=gols,fill=indicador),size=1,position = 'dodge',stat = "identity")+
+  scale_x_continuous(n.breaks = 13)+ # adiciona todos os anos no gráfico
+  theme_classic()+
+  theme(legend.position = "bottom",
+        legend.text = element_text(colour="black", size=10,
+                                   face="bold"))+
+  annotate("text",x = 2010, y = 1.5,xend = 2011, yend = 1,label="Sanchez")+
+  geom_vline(xintercept = 2012) +
+  annotate("text",x = 2013, y = 1.5,xend = 2014, yend = 1,label="Gobbi") +
+  geom_vline(xintercept = 2015) +
+  annotate("text",x = 2016, y = 1.5,xend = 2017, yend = 1,label="Andrade") +
+  geom_vline(xintercept = 2018) +
+  annotate("text",x = 2019, y = 1.5,xend = 2019, yend = 1,label="Sanchez") +
+  geom_vline(xintercept = 2021) +
+  annotate("text",x = 2022, y = 1.5,xend = 2021, yend = 1,label="Duilio") +
+  scale_fill_manual(name="",values=c("lightblue","#F8766D"))+
+  scale_y_continuous(n.breaks = 20)+
+  labs(x = "Anos", y = "Gols") -> plot_ad
+
+ggplotly(plot_ad)
+```
+
