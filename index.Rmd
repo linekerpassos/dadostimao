@@ -166,7 +166,7 @@ ggplot(dados) +
   annotate("text",x = 2020, y = 0.35,xend = 2022, yend = 1.3,label="Passivo LP/Ativo",size=3,color="#FF6600") +
   scale_colour_manual(name="",values=cor_line)+
   scale_fill_manual(values = c("white", "blue","black","red")) +
-  scale_x_continuous(n.breaks = 10)+ # adiciona todos os anos no gráfico
+  scale_x_continuous(n.breaks = 11)+ # adiciona todos os anos no gráfico
   xlab("") + 
   ylab("")+
   theme(legend.title = element_blank(),
@@ -223,6 +223,79 @@ layout(legend = list(orientation = "h",   # show entries horizontally
 
 > Nota: as demonstrações financeiras anteriores à 2019 não estão mais disponíveis no site do clube.
 
+### Fluxo Receitas e Despesas 2023
+
+```{r}
+df_cor <- readxl::read_excel(
+  "C:/Users/linek/Documents/R/dash_timao/plan-dre-timao.xlsx",
+  sheet=1) %>% 
+  mutate(type=case_when(
+    tipo=="despesas_futebol"~"Receitas futebol",
+    tipo=="receitas_futebol"~"Receitas futebol",
+    tipo=="receitas_clubsocial"~"Receitas clube social",
+    tipo=="despesas_clubsocial"~"Receitas clube social",
+  )) %>% 
+  filter(valor>0)
+
+nodes = data.frame(c(df_cor$desc, df_cor$type)) %>%
+  unique() %>% rename(node = 1)
+
+df_cor_plot <-
+df_cor %>% filter(tipo=="receitas_futebol"|tipo=="receitas_clubsocial") %>%
+  # select(-type) %>%
+  rename(Source = desc) %>%
+  mutate(Target = type) %>%
+  bind_rows(
+    df_cor %>%
+      filter(tipo=="despesas_futebol"|tipo=="despesas_clubsocial") %>%
+      # select(-Category) %>%
+      rename(Target = desc) %>%
+      mutate(Source = type)
+  ) %>% mutate(
+    IDSource = match(Source, nodes$node)-1,
+    IDTarget = match(Target, nodes$node)-1
+  ) %>% as.data.frame() %>% 
+  mutate(type=as.factor(type),
+         type=fct_relevel(type,c("Receitas futebol","Receitas clube social"))) %>% 
+  arrange(type) %>% 
+  filter(valor>0)
+
+my_color <- 'd3.scaleOrdinal() .domain(["black"]) .range(["black"])'
+
+p <-
+sankeyNetwork(Links = df_cor_plot, 
+              Nodes = nodes,
+              Source = "IDSource", 
+              Target = "IDTarget",
+              Value = "valor", 
+              NodeID = "node",
+              units = "$",
+              fontSize = 13,
+              # nodeWidth = 30,
+              width = "100%",
+              colourScale = my_color,
+               height = "500px",
+              sinksRight=T
+              )
+
+htmlwidgets::onRender(p, '
+  function(el) { 
+    var cols_x = this.sankey.nodes().map(d => d.x).filter((v, i, a) => a.indexOf(v) === i).sort(function(a, b){return a - b});
+    var labels = ["Receitas detalhadas", "Receita segmento", "Despesas"];
+    cols_x.forEach((d, i) => {
+      d3.select(el).select("svg")
+        .append("text")
+        .attr("x", d)
+        .attr("y", 12)
+        .text(labels[i]);
+    })
+  }
+')
+
+```
+
+> Notas: (1) valores no gráfico em milhares; (2) Receita Total: R$ 936.691 (em milhares); (3) Despesa Total: R$ 972.581 (em milhares).
+
 ### Fluxo Receitas e Despesas 2022
 
 ```{r}
@@ -270,12 +343,12 @@ sankeyNetwork(Links = df_cor_plot,
               Value = "valor", 
               NodeID = "node",
               units = "$",
-              fontSize = 14,
+              fontSize = 13,
               # nodeWidth = 30,
               width = "100%",
               colourScale = my_color,
                height = "500px",
-              sinksRight=FALSE
+              sinksRight=T
               )
 
 htmlwidgets::onRender(p, '
@@ -343,12 +416,12 @@ sankeyNetwork(Links = df_cor_plot,
               Value = "valor", 
               NodeID = "node",
               units = "$",
-              fontSize = 14,
+              fontSize = 13,
               # nodeWidth = 30,
               width = "100%",
               colourScale = my_color,
                height = "500px",
-              sinksRight=FALSE
+              sinksRight=T
               )
 
 htmlwidgets::onRender(p, '
