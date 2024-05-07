@@ -375,7 +375,7 @@ htmlwidgets::onRender(p, '
 ```{r}
 df_cor <- readxl::read_excel(
   "C:/Users/linek/Documents/R/dash_timao/plan-dre-timao.xlsx",
-  sheet=2) %>% 
+  sheet=3) %>% 
   mutate(type=case_when(
     tipo=="despesas_futebol"~"Receitas futebol",
     tipo=="receitas_futebol"~"Receitas futebol",
