@@ -73,9 +73,8 @@ fr_tit
 
 ```
 
-Dados patrimoniais e de resultado
+Dados patrimoniais
 ====================
-
 Column {data-width=500, .tabset}
 -----------------------------------------------------------------------
 ### Ativos e Passivos
@@ -182,6 +181,8 @@ ggplot(dados) +
 
 > Nota: CP = curto prazo; LP = longo prazo.
 
+Dados de resultado (econômico)
+====================
 Column {data-width=500, .tabset}
 -----------------------------------------------------------------------
 ### Receitas e Despesas do Futebol
@@ -301,7 +302,7 @@ htmlwidgets::onRender(p, '
 ```{r}
 df_cor <- readxl::read_excel(
   "C:/Users/linek/Documents/R/dash_timao/plan-dre-timao.xlsx",
-  sheet=1) %>% 
+  sheet=2) %>% 
   mutate(type=case_when(
     tipo=="despesas_futebol"~"Receitas futebol",
     tipo=="receitas_futebol"~"Receitas futebol",
