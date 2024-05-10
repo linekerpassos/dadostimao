@@ -56,7 +56,7 @@ library(htmlwidgets)
 arq <- "C:/Users/linek/Documents/R/Base-dados-Timao.xlsx"
 arq2 <- "C:/Users/linek/Documents/dados-BR-VP-Luxa.xlsx"
 
-dados <- read_xlsx(arq,1)
+dados <- read_xlsx(arq,3)
 dados$ano <- as.numeric(dados$ano)
 
 
@@ -134,6 +134,8 @@ layout(legend = list(orientation = "h",   # show entries horizontally
                      x = 0.5))             # put legend in center of x-axis  
 
 ```
+
+> Nota: valores ajustados pelo IPCA tomando como referência 2023.
 
 ### Endividamento por tipo e presidente
 
@@ -222,7 +224,7 @@ layout(legend = list(orientation = "h",   # show entries horizontally
 
 ```
 
-> Nota: as demonstrações financeiras anteriores à 2019 não estão mais disponíveis no site do clube.
+> Notas: (1) as demonstrações financeiras anteriores à 2019 não estão mais disponíveis no site do clube; (2) valores ajustados pelo IPCA tomando como referência 2023.
 
 ### Fluxo Receitas e Despesas 2023
 
